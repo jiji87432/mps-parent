@@ -1,0 +1,12 @@
+META-INF/spring-configuration-metadata.json
+com/chanpay/ppd/mps/provider/mapper/TripUserMapper.class
+com/chanpay/ppd/mps/provider/serviceimpl/CaptchaService.class
+com/chanpay/ppd/mps/provider/config/CacheConfig.class
+com/chanpay/ppd/mps/provider/mapper/SysMenuMapper.class
+com/chanpay/ppd/mps/provider/SysProviderApplication.class
+com/chanpay/ppd/mps/provider/config/DruidStatViewServlet.class
+com/chanpay/ppd/mps/provider/mapper/SysRoleMapper.class
+com/chanpay/ppd/mps/provider/serviceimpl/SystemService.class
+com/chanpay/ppd/mps/provider/mapper/SysUserMapper.class
+com/chanpay/ppd/mps/provider/serviceimpl/TripUserService.class
+com/chanpay/ppd/mps/provider/config/DatasourceConfig.class

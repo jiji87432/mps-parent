@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.chanpay.ppd.mps.web.config.UploadConfig,\
+com.chanpay.ppd.mps.web.config.WebConfig
