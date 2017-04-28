@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.chanpay.ppd.mps.common.redis.RedisConfig

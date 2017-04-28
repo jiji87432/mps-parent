@@ -1,8 +1,0 @@
-com/chanpay/ppd/mps/common/service/datasource/DynamicPlugin.class
-com/chanpay/ppd/mps/common/service/datasource/DynamicDataSource.class
-com/chanpay/ppd/mps/common/service/service/CrudService.class
-com/chanpay/ppd/mps/common/service/datasource/DynamicDataSourceHolder.class
-com/chanpay/ppd/mps/common/service/dao/CrudDao.class
-com/chanpay/ppd/mps/common/service/datasource/DynamicDataSourceTransactionManager.class
-com/chanpay/ppd/mps/common/service/datasource/DynamicDataSourceGlobal.class
-com/chanpay/ppd/mps/common/service/dao/BaseDao.class
