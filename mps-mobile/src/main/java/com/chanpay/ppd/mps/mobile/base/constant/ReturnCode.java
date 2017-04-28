@@ -3,7 +3,7 @@ package com.chanpay.ppd.mps.mobile.base.constant;
 /**
  * 返回 code 常量
  *
- * @author zhangxd
+ * @author zhangyongji
  */
 public final class ReturnCode {
 
@@ -51,38 +51,54 @@ public final class ReturnCode {
     /**
      * 400 字段校验错误
      */
-    public static final String INVALID_FIELD = "20002";
+    public static final String INVALID_FIELD = "20001";
 
 
     /**
      * 400 用户名,密码错误
      */
-    public static final String INVALID_GRANT = "30001";
+    public static final String INVALID_GRANT = "20002";
 
     /**
      * 403 用户被冻结
      */
-    public static final String DISABLED_USER = "30002";
+    public static final String DISABLED_USER = "20003";
 
 
     /**
      * 400 用户已存在
      */
-    public static final String USER_EXIST = "30101";
+    public static final String USER_EXIST = "20004";
     /**
      * 400 用户不存在
      */
-    public static final String USER_NOT_EXIST = "30102";
+    public static final String USER_NOT_EXIST = "20005";
     /**
      * 403 短信发送太频繁
      */
-    public static final String SMS_TOO_MUCH = "30103";
+    public static final String SMS_TOO_MUCH = "20006";
 
 
     /**
      * 400 无效验证码
      */
-    public static final String INVALID_CAPTCHA = "30201";
+    public static final String INVALID_CAPTCHA = "20007";
+
+    /**
+     * 400 订单支付失败
+     */
+    public static final String ORDER_PAYMENT_FAIL = "20008";
+
+
+    /**
+     * 400 主子商户校验
+     */
+    public static final String INVALID_MERCHANT_BIND = "20009";
+
+    /**
+     * 400 订单创建失败
+     */
+    public static final String ORDER_CREATE_FAIL = "20010";
 
     private ReturnCode() {
         throw new IllegalAccessError("Utility class");

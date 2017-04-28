@@ -1,7 +1,5 @@
 package com.chanpay.ppd.mps.mobile.common.helper;
 
-import com.chanpay.ppd.common.dto.BaseRequestDto;
-import com.chanpay.ppd.mps.common.utils.SeqUtils;
 import com.chanpay.ppd.mps.mobile.base.BaseRequestMessage;
 import com.chanpay.ppd.mps.mobile.base.constant.ParamConstants;
 import com.netfinworks.common.domain.OperationEnvironment;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Date;
 
 /**
  * @author zhangyongji
@@ -20,16 +17,10 @@ public class WebServiceHelper {
 
     private static OperationEnvironment opEnv = new OperationEnvironment();
 
-    public void requestWrapper(BaseRequestDto requestDto) {
-        requestDto.setOperSys(ParamConstants.OPER_SYS_CODE);
-        requestDto.setReqSysDate(new Date());
-        requestDto.setFlowNo(SeqUtils.getUniqueID());
-    }
-
     public void requestWrapper(BaseRequestMessage requestDto) {
-        requestDto.setOperSys(ParamConstants.OPER_SYS_CODE);
-        requestDto.setReqSysDate(new Date());
-        requestDto.setFlowNo(SeqUtils.getUniqueID());
+        requestDto.setOperSys(requestDto.getOperSys());
+        requestDto.setReqSysDate(requestDto.getReqSysDate());
+        requestDto.setFlowNo(requestDto.getFlowNo());
     }
 
     public static OperationEnvironment buildOpEnv() {
