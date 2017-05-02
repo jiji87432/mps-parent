@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 /**
  * Security User Detail Service
  *
- * @author zhangxd
+ * @author zhangyongji
  */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -25,6 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String loginName) {
+        //TODO 调用INS查询USER信息
         TripUser user = tripUserService.getByMobile(loginName);
 
         if (user == null) {

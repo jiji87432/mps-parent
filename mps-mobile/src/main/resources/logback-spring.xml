@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
 
-    <property name="APP_NAME" value="mobile-client"/>
+    <property name="APP_NAME" value="mps-mobile"/>
     <contextName>${APP_NAME}</contextName>
 
     <!-- 控制台彩色打印 -->

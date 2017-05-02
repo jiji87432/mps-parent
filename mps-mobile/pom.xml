@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mps-mobile</artifactId>
+    <packaging>war</packaging>
 
     <properties>
         <start-class>com.chanpay.ppd.mps.mobile.ClientMobileApplication</start-class>
@@ -29,7 +30,7 @@
                 <dubbo.registry.protocol>zookeeper</dubbo.registry.protocol>
                 <dubbo.registry.address>127.0.0.1:2181</dubbo.registry.address>
                 <dubbo.registry.client>curator</dubbo.registry.client>
-                <dubbo.registry.file>tmp/client_mobile.cache</dubbo.registry.file>
+                <dubbo.registry.file>tmp/mps-mobile.cache</dubbo.registry.file>
                 <dubbo.application.logger>slf4j</dubbo.application.logger>
                 <dubbo.logback.level>info</dubbo.logback.level>
                 <dubbo.monitor.protocol></dubbo.monitor.protocol>
@@ -53,7 +54,7 @@
                 <dubbo.registry.protocol>zookeeper</dubbo.registry.protocol>
                 <dubbo.registry.address>127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183</dubbo.registry.address>
                 <dubbo.registry.client>curator</dubbo.registry.client>
-                <dubbo.registry.file>/opt/data/zookeeper/client_mobile.cache</dubbo.registry.file>
+                <dubbo.registry.file>/opt/data/zookeeper/mps-mobile.cache</dubbo.registry.file>
                 <dubbo.application.logger>slf4j</dubbo.application.logger>
                 <dubbo.logback.level>error</dubbo.logback.level>
                 <dubbo.monitor.protocol>registry</dubbo.monitor.protocol>
@@ -74,7 +75,7 @@
                 <dubbo.registry.protocol>zookeeper</dubbo.registry.protocol>
                 <dubbo.registry.address>127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183</dubbo.registry.address>
                 <dubbo.registry.client>curator</dubbo.registry.client>
-                <dubbo.registry.file>/opt/data/zookeeper/client_mobile.cache</dubbo.registry.file>
+                <dubbo.registry.file>/opt/data/zookeeper/mps-mobile.cache</dubbo.registry.file>
                 <dubbo.application.logger>slf4j</dubbo.application.logger>
                 <dubbo.logback.level>error</dubbo.logback.level>
                 <dubbo.monitor.protocol>registry</dubbo.monitor.protocol>
@@ -93,6 +94,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- marked the embedded servlet container as provided -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Swagger -->
@@ -136,7 +144,7 @@
     </dependencies>
 
     <build>
-        <finalName>mps-mobile</finalName>
+        <finalName>mps</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
