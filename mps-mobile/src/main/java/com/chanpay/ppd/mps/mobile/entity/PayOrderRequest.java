@@ -3,6 +3,7 @@ package com.chanpay.ppd.mps.mobile.entity;
 import com.chanpay.ppd.mps.mobile.base.OrderBaseRequestMessage;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 /**
  * Created by jiji on 2017/4/24.
@@ -26,6 +27,7 @@ public class PayOrderRequest extends OrderBaseRequestMessage {
      * Q01-快捷支付
      */
     @NotNull(message = "{NotNull.PayOrderRequest.payTool}")
+    @Pattern(regexp = "^W01|W02|W03|A01|A02|A03|P01|P02|C01|Q01$",message = "{Pattern.PayOrderRequest.idType}")
     private String payTool;
 
     public PayOrderRequest() {

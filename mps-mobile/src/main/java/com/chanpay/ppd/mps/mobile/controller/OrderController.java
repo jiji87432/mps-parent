@@ -73,8 +73,8 @@ public class OrderController extends BaseController {
      * @param version the version
      * @return the user
      */
-    @PostMapping(value = "/orderInfo", produces = "application/json; charset=UTF-8")
-    @ApiOperation(value = "查询订单信息")
+    @PostMapping(value = "/info", produces = "application/json; charset=UTF-8")
+    @ApiOperation(value = "查询待支付订单信息")
     @ApiImplicitParams(
             {
                     @ApiImplicitParam(name = "Authorization", required = true, paramType = "header",

@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * The type Request limit contract.
  *
- * @author zhangxd
+ * @author zhangyongji
  */
 @Aspect
 @Component
@@ -26,7 +26,7 @@ public class RequestLimitContract {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestLimitContract.class);
     /**
-     * 缓存前缀
+     * redis缓存前缀
      */
     private static final String PREFIX = "req_limit_";
     /**

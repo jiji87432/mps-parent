@@ -6,7 +6,7 @@ import com.chanpay.ppd.mps.api.exception.base.BusinessException;
 /**
  * The type Request limit exception.
  *
- * @author zhangxd
+ * @author zhangyongji
  */
 public class RequestLimitException extends BusinessException {
 

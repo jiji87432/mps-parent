@@ -26,11 +26,11 @@ public class QueryOrderRequest extends OrderBaseRequestMessage {
     private String buyerName;
 
     // 订单创建开始时间
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyyMMddHHmmss")
     private Date orderStartDate;
 
     // 订单创建结束时间
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyyMMddHHmmss")
     private Date orderEndDate;
 
     public QueryOrderRequest() {

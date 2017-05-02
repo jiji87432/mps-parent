@@ -47,7 +47,7 @@ public class CreateOrderRequest extends OrderBaseRequestMessage {
 
     // 订单创建开始时间
     @NotNull(message = "{NotNull.CreateOrderRequest.payTool}")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyyMMddHHmmss")
     @Length(max = 14, message = "{Length.CreateOrderRequest.orderTime}")
     private Date orderTime;
 

@@ -1,6 +1,7 @@
 package com.chanpay.ppd.mps.mobile.entity;
 
 import com.chanpay.ppd.mps.mobile.base.BaseRequestMessage;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -11,24 +12,24 @@ import javax.validation.constraints.Pattern;
 public class UserBindRequest extends BaseRequestMessage {
 
     // 登录标识
-    @NotNull(message = "NotNull.UserLoginRequest.loginId")
-    @Pattern(regexp = "^((13[0-9])|(15[^4,\\\\D])|(18[0,5-9]))\\\\d{8}$")
+    @NotNull(message = "{NotNull.User.loginId}")
+    @Pattern(regexp = "^((13[0-9])|(15[^4,\\\\D])|(18[0,5-9]))\\\\d{8}$", message = "{Pattern.User.loginId}")
     private String loginId;
 
-    // 登录标识类型
-    @NotNull(message = "NotNull.UserLoginRequest.idType")
-    private String idType;
+    // 子登录标识
+    @NotNull(message = "{NotNull.UserBindRequest.subLoginId}")
+    @Pattern(regexp = "^((13[0-9])|(15[^4,\\\\D])|(18[0,5-9]))\\\\d{8}$", message = "{Pattern.UserBindRequest.loginId}")
+    private String subLoginId;
 
-    // 登录密码
-    @NotNull(message = "NotNull.UserLoginRequest.password")
-    private String password;
+    // 商户号
+    @NotNull(message = "{NotNull.MerInfo.merId}")
+    @Length(max = 32,message = "{Length.MerInfo.merId}")
+    private String merId;
 
-    // ip
-    private String ip;
-
-    // 设备号
-    @NotNull(message = "NotNull.UserLoginRequest.imei")
-    private String imei;
+    // 昵称
+    @NotNull(message = "{NotNull.User.nickName}")
+    @Length(max = 255, message = "{Length.User.nickName}")
+    private String nickName;
 
     public String getLoginId() {
         return loginId;
@@ -38,35 +39,27 @@ public class UserBindRequest extends BaseRequestMessage {
         this.loginId = loginId;
     }
 
-    public String getIdType() {
-        return idType;
+    public String getSubLoginId() {
+        return subLoginId;
     }
 
-    public void setIdType(String idType) {
-        this.idType = idType;
+    public void setSubLoginId(String subLoginId) {
+        this.subLoginId = subLoginId;
     }
 
-    public String getPassword() {
-        return password;
+    public String getMerId() {
+        return merId;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setMerId(String merId) {
+        this.merId = merId;
     }
 
-    public String getIp() {
-        return ip;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
-
-    public String getImei() {
-        return imei;
-    }
-
-    public void setImei(String imei) {
-        this.imei = imei;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 }
