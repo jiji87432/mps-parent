@@ -2,7 +2,8 @@ package com.chanpay.ppd.mps.common.redis;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.connection.RedisServerCommands;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisCallback;
@@ -46,11 +47,20 @@ public class RedisRepository {
      * @param time  过期时间
      */
     public void setExpire(final byte[] key, final byte[] value, final long time) {
-        redisTemplate.execute((RedisCallback<Long>) connection -> {
-            connection.set(key, value);
-            connection.expire(key, time);
-            LOGGER.info("[redisTemplate redis]放入 缓存  url:{} ========缓存时间为{}秒", key, time);
-            return 1L;
+        //redisTemplate.execute((RedisCallback<Long>) connection -> {
+        //    connection.set(key, value);
+        //    connection.expire(key, time);
+        //    LOGGER.info("[redisTemplate redis]放入 缓存  url:{} ========缓存时间为{}秒", key, time);
+        //    return 1L;
+        //});
+        redisTemplate.execute(new RedisCallback<Long>() {
+            @Override
+            public Long doInRedis(RedisConnection connection) throws DataAccessException {
+                connection.set(key, value);
+                connection.expire(key, time);
+                LOGGER.info("[redisTemplate redis]放入 缓存  url:{} ========缓存时间为{}秒", key, time);
+                return 1L;
+            }
         });
     }
 
@@ -62,14 +72,26 @@ public class RedisRepository {
      * @param time  过期时间
      */
     public void setExpire(final String key, final String value, final long time) {
-        redisTemplate.execute((RedisCallback<Long>) connection -> {
-            RedisSerializer<String> serializer = getRedisSerializer();
-            byte[] keys = serializer.serialize(key);
-            byte[] values = serializer.serialize(value);
-            connection.set(keys, values);
-            connection.expire(keys, time);
-            LOGGER.info("[redisTemplate redis]放入 缓存  url:{} ========缓存时间为{}秒", key, time);
-            return 1L;
+        //redisTemplate.execute((RedisCallback<Long>) connection -> {
+        //    RedisSerializer<String> serializer = getRedisSerializer();
+        //    byte[] keys = serializer.serialize(key);
+        //    byte[] values = serializer.serialize(value);
+        //    connection.set(keys, values);
+        //    connection.expire(keys, time);
+        //    LOGGER.info("[redisTemplate redis]放入 缓存  url:{} ========缓存时间为{}秒", key, time);
+        //    return 1L;
+        //});
+        redisTemplate.execute(new RedisCallback<Long>() {
+            @Override
+            public Long doInRedis(RedisConnection connection) throws DataAccessException {
+                RedisSerializer<String> serializer = getRedisSerializer();
+                byte[] keys = serializer.serialize(key);
+                byte[] values = serializer.serialize(value);
+                connection.set(keys, values);
+                connection.expire(keys, time);
+                LOGGER.info("[redisTemplate redis]放入 缓存  url:{} ========缓存时间为{}秒", key, time);
+                return 1L;
+            }
         });
     }
 
@@ -81,16 +103,31 @@ public class RedisRepository {
      * @param time   过期时间
      */
     public void setExpire(final String[] keys, final String[] values, final long time) {
-        redisTemplate.execute((RedisCallback<Long>) connection -> {
-            RedisSerializer<String> serializer = getRedisSerializer();
-            for (int i = 0; i < keys.length; i++) {
-                byte[] bKeys = serializer.serialize(keys[i]);
-                byte[] bValues = serializer.serialize(values[i]);
-                connection.set(bKeys, bValues);
-                connection.expire(bKeys, time);
-                LOGGER.info("[redisTemplate redis]放入 缓存  url:{} ========缓存时间为:{}秒", keys[i], time);
+        //redisTemplate.execute((RedisCallback<Long>) connection -> {
+        //    RedisSerializer<String> serializer = getRedisSerializer();
+        //    for (int i = 0; i < keys.length; i++) {
+        //        byte[] bKeys = serializer.serialize(keys[i]);
+        //        byte[] bValues = serializer.serialize(values[i]);
+        //        connection.set(bKeys, bValues);
+        //        connection.expire(bKeys, time);
+        //        LOGGER.info("[redisTemplate redis]放入 缓存  url:{} ========缓存时间为:{}秒", keys[i], time);
+        //    }
+        //    return 1L;
+        //});
+
+        redisTemplate.execute(new RedisCallback<Long>() {
+            @Override
+            public Long doInRedis(RedisConnection connection) throws DataAccessException {
+                RedisSerializer<String> serializer = getRedisSerializer();
+                for (int i = 0; i < keys.length; i++) {
+                    byte[] bKeys = serializer.serialize(keys[i]);
+                    byte[] bValues = serializer.serialize(values[i]);
+                    connection.set(bKeys, bValues);
+                    connection.expire(bKeys, time);
+                    LOGGER.info("[redisTemplate redis]放入 缓存  url:{} ========缓存时间为:{}秒", keys[i], time);
+                }
+                return 1L;
             }
-            return 1L;
         });
     }
 
@@ -102,15 +139,29 @@ public class RedisRepository {
      * @param values the values
      */
     public void set(final String[] keys, final String[] values) {
-        redisTemplate.execute((RedisCallback<Long>) connection -> {
-            RedisSerializer<String> serializer = getRedisSerializer();
-            for (int i = 0; i < keys.length; i++) {
-                byte[] bKeys = serializer.serialize(keys[i]);
-                byte[] bValues = serializer.serialize(values[i]);
-                connection.set(bKeys, bValues);
-                LOGGER.info("[redisTemplate redis]放入 缓存  url:{}", keys[i]);
+        //redisTemplate.execute((RedisCallback<Long>) connection -> {
+        //    RedisSerializer<String> serializer = getRedisSerializer();
+        //    for (int i = 0; i < keys.length; i++) {
+        //        byte[] bKeys = serializer.serialize(keys[i]);
+        //        byte[] bValues = serializer.serialize(values[i]);
+        //        connection.set(bKeys, bValues);
+        //        LOGGER.info("[redisTemplate redis]放入 缓存  url:{}", keys[i]);
+        //    }
+        //    return 1L;
+        //});
+
+        redisTemplate.execute(new RedisCallback<Long>() {
+            @Override
+            public Long doInRedis(RedisConnection connection) throws DataAccessException {
+                RedisSerializer<String> serializer = getRedisSerializer();
+                for (int i = 0; i < keys.length; i++) {
+                    byte[] bKeys = serializer.serialize(keys[i]);
+                    byte[] bValues = serializer.serialize(values[i]);
+                    connection.set(bKeys, bValues);
+                    LOGGER.info("[redisTemplate redis]放入 缓存  url:{}", keys[i]);
+                }
+                return 1L;
             }
-            return 1L;
         });
     }
 
@@ -122,13 +173,24 @@ public class RedisRepository {
      * @param value the value
      */
     public void set(final String key, final String value) {
-        redisTemplate.execute((RedisCallback<Long>) connection -> {
-            RedisSerializer<String> serializer = getRedisSerializer();
-            byte[] keys = serializer.serialize(key);
-            byte[] values = serializer.serialize(value);
-            connection.set(keys, values);
-            LOGGER.info("[redisTemplate redis]放入 缓存  url:{}", key);
-            return 1L;
+        //redisTemplate.execute((RedisCallback<Long>) connection -> {
+        //    RedisSerializer<String> serializer = getRedisSerializer();
+        //    byte[] keys = serializer.serialize(key);
+        //    byte[] values = serializer.serialize(value);
+        //    connection.set(keys, values);
+        //    LOGGER.info("[redisTemplate redis]放入 缓存  url:{}", key);
+        //    return 1L;
+        //});
+        redisTemplate.execute(new RedisCallback<Long>() {
+            @Override
+            public Long doInRedis(RedisConnection connection) throws DataAccessException {
+                RedisSerializer<String> serializer = getRedisSerializer();
+                byte[] keys = serializer.serialize(key);
+                byte[] values = serializer.serialize(value);
+                connection.set(keys, values);
+                LOGGER.info("[redisTemplate redis]放入 缓存  url:{}", key);
+                return 1L;
+            }
         });
     }
 
@@ -141,15 +203,28 @@ public class RedisRepository {
      */
     public List<String> willExpire(final String key, final long time) {
         final List<String> keysList = new ArrayList<>();
-        redisTemplate.execute((RedisCallback<List<String>>) connection -> {
-            Set<String> keys = redisTemplate.keys(key + "*");
-            for (String key1 : keys) {
-                Long ttl = connection.ttl(key1.getBytes(DEFAULT_CHARSET));
-                if (0 <= ttl && ttl <= 2 * time) {
-                    keysList.add(key1);
+        //redisTemplate.execute((RedisCallback<List<String>>) connection -> {
+        //    Set<String> keys = redisTemplate.keys(key + "*");
+        //    for (String key1 : keys) {
+        //        Long ttl = connection.ttl(key1.getBytes(DEFAULT_CHARSET));
+        //        if (0 <= ttl && ttl <= 2 * time) {
+        //            keysList.add(key1);
+        //        }
+        //    }
+        //    return keysList;
+        //});
+        redisTemplate.execute(new RedisCallback<List<String>>() {
+            @Override
+            public List<String> doInRedis(RedisConnection connection) throws DataAccessException {
+                Set<String> keys = redisTemplate.keys(key + "*");
+                for (String key1 : keys) {
+                    Long ttl = connection.ttl(key1.getBytes(DEFAULT_CHARSET));
+                    if (0 <= ttl && ttl <= 2 * time) {
+                        keysList.add(key1);
+                    }
                 }
+                return keysList;
             }
-            return keysList;
         });
         return keysList;
     }
@@ -162,7 +237,13 @@ public class RedisRepository {
      * @return the set
      */
     public Set<String> keys(final String keyPatten) {
-        return redisTemplate.execute((RedisCallback<Set<String>>) connection -> redisTemplate.keys(keyPatten + "*"));
+        //return redisTemplate.execute((RedisCallback<Set<String>>) connection -> redisTemplate.keys(keyPatten + "*"));
+        return redisTemplate.execute(new RedisCallback<Set<String>>() {
+            @Override
+            public Set<String> doInRedis(RedisConnection connection) throws DataAccessException {
+                return redisTemplate.keys(keyPatten + "*");
+            }
+        });
     }
 
     /**
@@ -172,7 +253,13 @@ public class RedisRepository {
      * @return the byte [ ]
      */
     public byte[] get(final byte[] key) {
-        byte[] result = redisTemplate.execute((RedisCallback<byte[]>) connection -> connection.get(key));
+        //byte[] result = redisTemplate.execute((RedisCallback<byte[]>) connection -> connection.get(key));
+        byte[] result = redisTemplate.execute(new RedisCallback<byte[]>() {
+            @Override
+            public byte[] doInRedis(RedisConnection connection) throws DataAccessException {
+                return connection.get(key);
+            }
+        });
         LOGGER.info("[redisTemplate redis]取出 缓存  url:{} ", key);
         return result;
     }
@@ -184,11 +271,20 @@ public class RedisRepository {
      * @return the string
      */
     public String get(final String key) {
-        String resultStr = redisTemplate.execute((RedisCallback<String>) connection -> {
-            RedisSerializer<String> serializer = getRedisSerializer();
-            byte[] keys = serializer.serialize(key);
-            byte[] values = connection.get(keys);
-            return serializer.deserialize(values);
+        //String resultStr = redisTemplate.execute((RedisCallback<String>) connection -> {
+        //    RedisSerializer<String> serializer = getRedisSerializer();
+        //    byte[] keys = serializer.serialize(key);
+        //    byte[] values = connection.get(keys);
+        //    return serializer.deserialize(values);
+        //});
+        String resultStr = redisTemplate.execute(new RedisCallback<String>() {
+            @Override
+            public String doInRedis(RedisConnection connection) throws DataAccessException {
+                RedisSerializer<String> serializer = getRedisSerializer();
+                byte[] keys = serializer.serialize(key);
+                byte[] values = connection.get(keys);
+                return serializer.deserialize(values);
+            }
         });
         LOGGER.info("[redisTemplate redis]取出 缓存  url:{} ", key);
         return resultStr;
@@ -203,17 +299,32 @@ public class RedisRepository {
      */
     public Map<String, String> getKeysValues(final String keyPatten) {
         LOGGER.info("[redisTemplate redis]  getValues()  patten={} ", keyPatten);
-        return redisTemplate.execute((RedisCallback<Map<String, String>>) connection -> {
-            RedisSerializer<String> serializer = getRedisSerializer();
-            Map<String, String> maps = new HashMap<>();
-            Set<String> keys = redisTemplate.keys(keyPatten + "*");
-            for (String key : keys) {
-                byte[] bKeys = serializer.serialize(key);
-                byte[] bValues = connection.get(bKeys);
-                String value = serializer.deserialize(bValues);
-                maps.put(key, value);
+        //return redisTemplate.execute((RedisCallback<Map<String, String>>) connection -> {
+        //    RedisSerializer<String> serializer = getRedisSerializer();
+        //    Map<String, String> maps = new HashMap<>();
+        //    Set<String> keys = redisTemplate.keys(keyPatten + "*");
+        //    for (String key : keys) {
+        //        byte[] bKeys = serializer.serialize(key);
+        //        byte[] bValues = connection.get(bKeys);
+        //        String value = serializer.deserialize(bValues);
+        //        maps.put(key, value);
+        //    }
+        //    return maps;
+        //});
+        return redisTemplate.execute(new RedisCallback<Map<String, String>>() {
+            @Override
+            public Map<String, String> doInRedis(RedisConnection connection) throws DataAccessException {
+                RedisSerializer<String> serializer = getRedisSerializer();
+                Map<String, String> maps = new HashMap<>();
+                Set<String> keys = redisTemplate.keys(keyPatten + "*");
+                for (String key : keys) {
+                    byte[] bKeys = serializer.serialize(key);
+                    byte[] bValues = connection.get(bKeys);
+                    String value = serializer.deserialize(bValues);
+                    maps.put(key, value);
+                }
+                return maps;
             }
-            return maps;
         });
     }
 
@@ -288,7 +399,13 @@ public class RedisRepository {
      * @return the long
      */
     public long dbSize() {
-        return redisTemplate.execute(RedisServerCommands::dbSize);
+        //return redisTemplate.execute(RedisServerCommands::dbSize);
+        return redisTemplate.execute(new RedisCallback<Long>() {
+            @Override
+            public Long doInRedis(RedisConnection connection) throws DataAccessException {
+                return connection.dbSize();
+            }
+        });
     }
 
     /**
@@ -297,9 +414,16 @@ public class RedisRepository {
      * @return the string
      */
     public String flushDB() {
-        return redisTemplate.execute((RedisCallback<String>) connection -> {
-            connection.flushDb();
-            return "ok";
+        //return redisTemplate.execute((RedisCallback<String>) connection -> {
+        //    connection.flushDb();
+        //    return "ok";
+        //});
+        return redisTemplate.execute(new RedisCallback<String>() {
+            @Override
+            public String doInRedis(RedisConnection connection) throws DataAccessException {
+                connection.flushDb();
+                return "ok";
+            }
         });
     }
 
@@ -310,7 +434,13 @@ public class RedisRepository {
      * @return the boolean
      */
     public boolean exists(final String key) {
-        return redisTemplate.execute((RedisCallback<Boolean>) connection -> connection.exists(key.getBytes(DEFAULT_CHARSET)));
+        //return redisTemplate.execute((RedisCallback<Boolean>) connection -> connection.exists(key.getBytes(DEFAULT_CHARSET)));
+        return redisTemplate.execute(new RedisCallback<Boolean>() {
+            @Override
+            public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
+                return connection.exists(key.getBytes(DEFAULT_CHARSET));
+            }
+        });
     }
 
 
@@ -321,12 +451,22 @@ public class RedisRepository {
      * @return the long
      */
     public long del(final String... keys) {
-        return redisTemplate.execute((RedisCallback<Long>) connection -> {
-            long result = 0;
-            for (String key : keys) {
-                result = connection.del(key.getBytes(DEFAULT_CHARSET));
+        //return redisTemplate.execute((RedisCallback<Long>) connection -> {
+        //    long result = 0;
+        //    for (String key : keys) {
+        //        result = connection.del(key.getBytes(DEFAULT_CHARSET));
+        //    }
+        //    return result;
+        //});
+        return redisTemplate.execute(new RedisCallback<Long>() {
+            @Override
+            public Long doInRedis(RedisConnection connection) throws DataAccessException {
+                long result = 0;
+                for (String key : keys) {
+                    result = connection.del(key.getBytes(DEFAULT_CHARSET));
+                }
+                return result;
             }
-            return result;
         });
     }
 
@@ -346,9 +486,16 @@ public class RedisRepository {
      * @return the long
      */
     public long incr(final String key) {
-        return redisTemplate.execute((RedisCallback<Long>) connection -> {
-            RedisSerializer<String> redisSerializer = getRedisSerializer();
-            return connection.incr(redisSerializer.serialize(key));
+        //return redisTemplate.execute((RedisCallback<Long>) connection -> {
+        //    RedisSerializer<String> redisSerializer = getRedisSerializer();
+        //    return connection.incr(redisSerializer.serialize(key));
+        //});
+        return redisTemplate.execute(new RedisCallback<Long>() {
+            @Override
+            public Long doInRedis(RedisConnection connection) throws DataAccessException {
+                RedisSerializer<String> redisSerializer = getRedisSerializer();
+                return connection.incr(redisSerializer.serialize(key));
+            }
         });
     }
 

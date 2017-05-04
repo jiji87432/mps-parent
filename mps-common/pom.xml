@@ -16,6 +16,7 @@
         <module>mps-common-utils</module>
         <module>mps-common-upload</module>
         <module>mps-common-redis</module>
+        <module>mps-common-activemq</module>
         <module>mps-common-service</module>
         <module>mps-common-api</module>
         <module>mps-common-web</module>

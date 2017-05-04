@@ -158,16 +158,26 @@ public class SystemService implements ISystemService {
      * @param parentId   父级编号
      */
     private void sortList(List<SysMenu> list, List<SysMenu> sourceList, String parentId) {
-        sourceList.stream()
-            .filter(menu -> menu.getParentId() != null && menu.getParentId().equals(parentId))
-            .forEach(menu -> {
+        //sourceList.stream()
+        //    .filter(menu -> menu.getParentId() != null && menu.getParentId().equals(parentId))
+        //    .forEach(menu -> {
+        //        list.add(menu);
+        //        // 判断是否还有子节点, 有则继续获取子节点
+        //        sourceList.stream()
+        //            .filter(child -> child.getParentId() != null && child.getParentId().equals(menu.getId()))
+        //            .peek(child -> sortList(list, sourceList, menu.getId()))
+        //            .findFirst();
+        //    });
+        for (SysMenu menu : sourceList) {
+            if (menu.getParentId() != null && menu.getParentId().equals(parentId)) {
                 list.add(menu);
-                // 判断是否还有子节点, 有则继续获取子节点
-                sourceList.stream()
-                    .filter(child -> child.getParentId() != null && child.getParentId().equals(menu.getId()))
-                    .peek(child -> sortList(list, sourceList, menu.getId()))
-                    .findFirst();
-            });
+                for (SysMenu child : sourceList) {
+                    if (child.getParentId() != null && child.getParentId().equals(menu.getId())) {
+                        sortList(list, sourceList, menu.getId());
+                    }
+                }
+            }
+        }
     }
 
     /**
