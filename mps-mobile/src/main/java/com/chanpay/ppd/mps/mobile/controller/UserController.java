@@ -1,5 +1,8 @@
 package com.chanpay.ppd.mps.mobile.controller;
 
+import com.chanpay.ppd.ins.api.mch.facade.IMchUserFacade;
+import com.chanpay.ppd.ins.api.mch.facade.dto.AddMchUserRequest;
+import com.chanpay.ppd.ins.api.mch.facade.dto.UpdateNickNameRequest;
 import com.chanpay.ppd.mps.api.entity.TripUser;
 import com.chanpay.ppd.mps.api.exception.InvalidCaptchaException;
 import com.chanpay.ppd.mps.api.exception.UserExistException;
@@ -11,6 +14,9 @@ import com.chanpay.ppd.mps.common.upload.util.FileManager;
 import com.chanpay.ppd.mps.mobile.base.BaseResponeMessage;
 import com.chanpay.ppd.mps.mobile.base.constant.ReturnCode;
 import com.chanpay.ppd.mps.mobile.common.controller.BaseController;
+import com.chanpay.ppd.mps.mobile.common.helper.WebServiceHelper;
+import com.chanpay.ppd.mps.mobile.entity.UpdateUserInfoRequest;
+import com.chanpay.ppd.mps.mobile.entity.UserBindRequest;
 import com.chanpay.ppd.mps.mobile.security.model.AuthUser;
 import com.chanpay.ppd.mps.web.util.WebUtils;
 import io.swagger.annotations.*;
@@ -44,6 +50,10 @@ public class UserController extends BaseController {
      */
     @Autowired
     private ITripUserService tripUserService;
+
+    private IMchUserFacade mchUserFacade;
+    @Autowired
+    private WebServiceHelper webServiceHelper;
     /**
      * 验证码服务
      */
@@ -68,13 +78,18 @@ public class UserController extends BaseController {
      * @throws InvalidCaptchaException the invalid captcha exception
      */
     @PostMapping(value = "", produces = "application/json; charset=UTF-8")
-    @ApiOperation(value = "注册用户")
-    public Map<String, Object> registryUser(@RequestBody @Valid TripUser user, BindingResult bindingResult,
+    @ApiOperation(value = "用户注册")
+    public Map<String, Object> registryUser(@RequestBody @Valid UserBindRequest request, BindingResult bindingResult,
                                             @ApiParam(required = true, value = "版本", defaultValue = "v1") @PathVariable("version") String version
     ) throws UserExistException {
+        AddMchUserRequest addMchUserRequest = new AddMchUserRequest();
+        webServiceHelper.requestWrapper(request);
+        addMchUserRequest.setHilvId(request.getLoginId());
+        addMchUserRequest.setIdType(request.getIdType());
+        addMchUserRequest.setLoginId(request.getSubLoginId());
+        addMchUserRequest.setMchId(request.getMerId());
         // 注册
-        tripUserService.registryUser(user.getMobile(), passwordEncoder.encode(user.getPassword()));
-
+        mchUserFacade.addMchUser(addMchUserRequest);
         Map<String, Object> message = new HashMap<>();
         message.put(BaseResponeMessage.RESP_CODE, ReturnCode.SUCCESS);
         message.put(BaseResponeMessage.RESP_CODE_DESC, ReturnCode.SUCCESS_DESC);
@@ -102,13 +117,6 @@ public class UserController extends BaseController {
 
         TripUser tripUser = tripUserService.get(user.getId());
 
-        //Map<String, Object> result = new HashMap<>();
-        //result.put("mobile", tripUser.getMobile()); //手机号
-        //result.put("photo", fileManager.getFileUrlByRealPath(tripUser.getPhoto())); //头像
-        //result.put("nickname", tripUser.getNickname()); //昵称
-        //result.put("gender", tripUser.getGender()); //性别
-        //result.put("age", tripUser.getAge()); //年龄
-
         Map<String, Object> message = new HashMap<>();
         message.put(BaseResponeMessage.RESP_CODE, ReturnCode.SUCCESS);
         message.put(BaseResponeMessage.RESP_CODE_DESC, ReturnCode.SUCCESS_DESC);
@@ -118,12 +126,9 @@ public class UserController extends BaseController {
 
     /**
      * Update user map.
-     *
-     * @param version  the version
-     * @param nickname the nickname
-     * @param gender   the gender
-     * @param age      the age
-     * @return the map
+     * @param version
+     * @param request
+     * @return
      */
     @PutMapping(value = "", produces = "application/json; charset=UTF-8")
     @ApiOperation(value = "修改用户信息")
@@ -134,21 +139,14 @@ public class UserController extends BaseController {
             }
     )
     public Map<String, Object> updateUser(
-            @ApiParam(required = true, value = "版本", defaultValue = "v1") @PathVariable("version") String version,
-            @Length(max = 10, message = "昵称最大长度为10")
-            @ApiParam(required = true, value = "昵称") @RequestParam("nickname") String nickname,
-            @Pattern(regexp = "0|1|2", message = "性别类型错误")
-            @ApiParam(required = true, value = "性别 [未知,男,女]", allowableValues = "0,1,2") @RequestParam("gender") String gender,
-            @ApiParam(required = true, value = "年龄") @RequestParam("age") String age
+            @ApiParam(required = true, value = "版本", defaultValue = "v1") @PathVariable("version") String version, UpdateUserInfoRequest request
     ) {
-        AuthUser user = WebUtils.getCurrentUser();
-
-        TripUser tripUser = new TripUser(user.getId());
-        tripUser.setNickname(nickname);
-        tripUser.setGender(gender);
-        tripUser.setAge(age);
-        tripUserService.updateInfo(tripUser);
-
+        UpdateNickNameRequest updateNickNameRequest = new UpdateNickNameRequest();
+        webServiceHelper.requestWrapper(request);
+        updateNickNameRequest.setLoginId(request.getLoginId());
+        updateNickNameRequest.setIdType(request.getIdType());
+        updateNickNameRequest.setNickName(request.getNickName());
+        mchUserFacade.updateNickName(updateNickNameRequest);
         Map<String, Object> message = new HashMap<>();
         message.put(BaseResponeMessage.RESP_CODE, ReturnCode.SUCCESS);
         message.put(BaseResponeMessage.RESP_CODE_DESC, ReturnCode.SUCCESS_DESC);
@@ -234,5 +232,4 @@ public class UserController extends BaseController {
     public Map<String, Object> handleSmsTooMuchException(UserExistException ex) {
         return makeErrorMessage(ReturnCode.USER_EXIST, "User exist", ex.getMessage());
     }
-
 }

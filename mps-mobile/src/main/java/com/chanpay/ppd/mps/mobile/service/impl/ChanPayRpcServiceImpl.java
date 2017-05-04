@@ -9,12 +9,14 @@ import com.chanpay.ppd.mps.mobile.service.ChanPayRpcService;
 import com.netfinworks.common.domain.OperationEnvironment;
 import com.netfinworks.common.util.money.Money;
 import com.netfinworks.tradeservice.facade.api.TradeProcessFacade;
+import com.netfinworks.tradeservice.facade.api.TradeQueryFacade;
 import com.netfinworks.tradeservice.facade.enums.TradeType;
 import com.netfinworks.tradeservice.facade.model.AcquiringTradeItemDetail;
 import com.netfinworks.tradeservice.facade.model.PaymentInfo;
 import com.netfinworks.tradeservice.facade.model.TradeItemDetail;
 import com.netfinworks.tradeservice.facade.model.paymethod.OnlineBankPayMethod;
 import com.netfinworks.tradeservice.facade.request.TradeRequest;
+import com.netfinworks.tradeservice.facade.response.PaymentQueryResponse;
 import com.netfinworks.tradeservice.facade.response.PaymentResponse;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.slf4j.Logger;
@@ -89,12 +91,30 @@ public class ChanPayRpcServiceImpl implements ChanPayRpcService {
         jaxWsProxyFactoryBean.setAddress(tradeWsUrl);
         TradeProcessFacade facade = (TradeProcessFacade)jaxWsProxyFactoryBean.create();
         PaymentResponse response = facade.createAndPay(tradeRequest, opEnv);
-        if (response != null) {
+        if (response != null && response.isSuccess()) {
             LOGGER.info("response message:" + response.getErrorCode(), response.getResultMessage());
             if (!ParamConstants.TradeService.SUCCESS.equals(response.getErrorCode().equals("S0001"))) {
                 throw new OrderPayMentFailException(String.format("订单 '%s' 支付失败", response.getPaymentVoucherNo()));
             }
         }
         return response;
+    }
+
+    @Override
+    public PaymentQueryResponse queryPaymentResult(String tradeVoucherNo) {
+        OperationEnvironment envInfo = WebServiceHelper.buildOpEnv();
+        JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
+        jaxWsProxyFactoryBean.setServiceClass(TradeProcessFacade.class);
+        LOGGER.debug("jaxWsURL:" + tradeWsUrl);
+        jaxWsProxyFactoryBean.setAddress(tradeWsUrl);
+        TradeQueryFacade facade = (TradeQueryFacade) jaxWsProxyFactoryBean.create();
+        PaymentResponse response = facade.queryPaymentDetail(tradeVoucherNo, envInfo);
+        if (response != null && response.isSuccess()) {
+            LOGGER.info("response message:" + response.getErrorCode(), response.getResultMessage());
+            if (ParamConstants.TradeService.SUCCESS.equals(response.getErrorCode().equals("S0001"))) {
+                // 放入消息队列，mos系统消费队列并进行通知
+            }
+        }
+        return null;
     }
 }

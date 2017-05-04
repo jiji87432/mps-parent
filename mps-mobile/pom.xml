@@ -114,6 +114,10 @@
             <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
         <!-- cxf -->
         <dependency>
             <groupId>org.apache.cxf</groupId>
@@ -135,6 +139,10 @@
         <dependency>
             <groupId>com.chanpay.ppd.ins</groupId>
             <artifactId>ins-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.netfinworks.ma.service</groupId>
+            <artifactId>ma-service-facade</artifactId>
         </dependency>
         <dependency>
             <groupId>com.chanpay.ppd.mps</groupId>

@@ -1,12 +1,12 @@
 package com.chanpay.ppd.mps.mobile.controller;
 
-import com.chanpay.ppd.mps.api.entity.TripUser;
 import com.chanpay.ppd.mps.api.exception.UserNotExistException;
 import com.chanpay.ppd.mps.api.exception.UserPwdErrorException;
 import com.chanpay.ppd.mps.api.exception.base.BusinessException;
 import com.chanpay.ppd.mps.api.service.ITripUserService;
-import com.chanpay.ppd.mps.mobile.common.controller.BaseController;
 import com.chanpay.ppd.mps.mobile.base.constant.ReturnCode;
+import com.chanpay.ppd.mps.mobile.common.controller.BaseController;
+import com.chanpay.ppd.mps.mobile.entity.UserLoginRequest;
 import com.chanpay.ppd.mps.mobile.security.utils.TokenUtil;
 import com.chanpay.ppd.mps.web.security.AuthenticationTokenFilter;
 import io.swagger.annotations.Api;
@@ -60,24 +60,23 @@ public class AuthController extends BaseController {
 
     /**
      * Create authentication token bearer auth token.
-     *
-     * @param tripUser
+     * @param request
      * @return
      * @throws BusinessException
      */
     @PostMapping(value = "/token")
     @ApiOperation("登录鉴权")
-    public Map<String, Object> createAuthenticationToken(@RequestBody TripUser tripUser) throws BusinessException {
-        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(tripUser.getMobile(), tripUser.getPassword());
+    public Map<String, Object> createAuthenticationToken(@RequestBody UserLoginRequest request) throws BusinessException {
+        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(request.getLoginId(), request.getPassword());
         final Authentication authentication = authenticationManager.authenticate(upToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         final String token = jwtTokenUtil.generateToken(userDetails);
         // Return the token
         Map<String, Object> tokenMap = new HashMap<>();
-        tokenMap.put("access_token", token);
-        tokenMap.put("expires_in", jwtTokenUtil.getExpiration());
-        tokenMap.put("token_type", TokenUtil.TOKEN_TYPE_BEARER);
+        tokenMap.put("accessToken", token);
+        tokenMap.put("expirationDate", jwtTokenUtil.getExpiration());
+        tokenMap.put("tokenType", TokenUtil.TOKEN_TYPE_BEARER);
         return tokenMap;
     }
 

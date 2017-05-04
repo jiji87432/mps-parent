@@ -21,6 +21,11 @@ public class UserBindRequest extends BaseRequestMessage {
     @Pattern(regexp = "^((13[0-9])|(15[^4,\\\\D])|(18[0,5-9]))\\\\d{8}$", message = "{Pattern.UserBindRequest.loginId}")
     private String subLoginId;
 
+    // 登录标识类型
+    @NotNull(message = "{NotNull.User.idType}")
+    @Pattern(regexp = "^01|02$", message = "{Pattern.User.idType}")
+    private String idType;
+
     // 商户号
     @NotNull(message = "{NotNull.MerInfo.merId}")
     @Length(max = 32,message = "{Length.MerInfo.merId}")
@@ -61,5 +66,13 @@ public class UserBindRequest extends BaseRequestMessage {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getIdType() {
+        return idType;
+    }
+
+    public void setIdType(String idType) {
+        this.idType = idType;
     }
 }

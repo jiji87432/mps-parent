@@ -16,6 +16,11 @@ public class UpdateUserInfoRequest extends BaseRequestMessage {
     @Pattern(regexp = "^((13[0-9])|(15[^4,\\\\D])|(18[0,5-9]))\\\\d{8}$", message = "{Pattern.User.loginId}")
     private String loginId;
 
+    // 登录标识类型
+    @NotNull(message = "{NotNull.User.idType}")
+    @Pattern(regexp = "^01|02$", message = "{Pattern.User.idType}")
+    private String idType;
+
     // 昵称
     @NotNull(message = "{NotNull.User.nickName}")
     @Length(max = 255, message = "{Length.User.nickName}")
@@ -36,5 +41,13 @@ public class UpdateUserInfoRequest extends BaseRequestMessage {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getIdType() {
+        return idType;
+    }
+
+    public void setIdType(String idType) {
+        this.idType = idType;
     }
 }
