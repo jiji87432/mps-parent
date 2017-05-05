@@ -15,8 +15,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
-import java.lang.reflect.Method;
-
 /**
  * 缓存配置
  *
@@ -33,28 +31,15 @@ public class CacheConfig extends CachingConfigurerSupport {
      */
     @Bean
     public KeyGenerator methodKeyGenerator() {
-        //return (target, method, params) -> {
-        //    StringBuilder sb = new StringBuilder();
-        //    sb.append(target.getClass().getName());
-        //    sb.append(method.getName());
-        //    for (Object obj : params) {
-        //        sb.append(obj.toString());
-        //    }
-        //    return sb.toString();
-        //};
-        KeyGenerator keyGenerator = new KeyGenerator() {
-            @Override
-            public Object generate(Object target, Method method, Object... params) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(target.getClass().getName());
-                sb.append(method.getName());
-                for (Object obj : params) {
-                    sb.append(obj.toString());
-                }
-                return sb.toString();
+        return (target, method, params) -> {
+            StringBuilder sb = new StringBuilder();
+            sb.append(target.getClass().getName());
+            sb.append(method.getName());
+            for (Object obj : params) {
+                sb.append(obj.toString());
             }
+            return sb.toString();
         };
-        return keyGenerator;
     }
 
     /**

@@ -3,7 +3,13 @@ package com.chanpay.ppd.mps.common.utils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Collections工具集.
@@ -34,7 +40,7 @@ public final class Collections3 {
         try {
             for (Object obj : collection) {
                 map.put(PropertyUtils.getProperty(obj, keyPropertyName),
-                    PropertyUtils.getProperty(obj, valuePropertyName));
+                        PropertyUtils.getProperty(obj, valuePropertyName));
             }
         } catch (Exception e) {
             throw Reflections.convertReflectionExceptionToUnchecked(e);
@@ -180,12 +186,12 @@ public final class Collections3 {
      * @param b   the b
      * @return the list
      */
-    //public static <T> List<T> subtract(final Collection<T> a, final Collection<T> b) {
-    //    List<T> list = new ArrayList<>(a);
-    //    b.forEach(list::remove);
-    //
-    //    return list;
-    //}
+    public static <T> List<T> subtract(final Collection<T> a, final Collection<T> b) {
+        List<T> list = new ArrayList<>(a);
+        b.forEach(list::remove);
+
+        return list;
+    }
 
     /**
      * 返回a与b的交集的新List.
@@ -195,8 +201,8 @@ public final class Collections3 {
      * @param b   the b
      * @return the list
      */
-    //public static <T> List<T> intersection(Collection<T> a, Collection<T> b) {
-    //
-    //    return a.stream().filter(b::contains).collect(Collectors.toList());
-    //}
+    public static <T> List<T> intersection(Collection<T> a, Collection<T> b) {
+
+        return a.stream().filter(b::contains).collect(Collectors.toList());
+    }
 }

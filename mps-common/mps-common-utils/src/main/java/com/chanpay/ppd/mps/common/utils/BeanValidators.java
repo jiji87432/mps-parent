@@ -1,14 +1,16 @@
 package com.chanpay.ppd.mps.common.utils;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * JSR303 Validator(Hibernate Validator)工具类.
@@ -55,28 +57,16 @@ public final class BeanValidators {
     }
 
     /**
-     * jdk1.8辅助方法, 转换Set<ConstraintViolation>为List<message>
+     * 辅助方法, 转换Set<ConstraintViolation>为List<message>
      *
      * @param constraintViolations the constraint violations
      * @return the list
      */
-    //@SuppressWarnings("rawtypes")
-    //public static List<String> extractMessage(Set<? extends ConstraintViolation> constraintViolations) {
-    //    List<String> errorMessages = Lists.newArrayList();
-    //    errorMessages.addAll(constraintViolations.stream().map((Function<ConstraintViolation, String>) ConstraintViolation::getMessage).collect(Collectors.toList()));
-    //    return  errorMessages;
-    //}
-
-    /**
-     * 辅助方法, 转换Set<ConstraintViolation>为List<message>
-     */
     @SuppressWarnings("rawtypes")
     public static List<String> extractMessage(Set<? extends ConstraintViolation> constraintViolations) {
-        List<String> errorMessages = new ArrayList<String>();
-        for (ConstraintViolation violation : constraintViolations) {
-            errorMessages.add(violation.getMessage());
-        }
-        return errorMessages;
+        List<String> errorMessages = Lists.newArrayList();
+        errorMessages.addAll(constraintViolations.stream().map((Function<ConstraintViolation, String>) ConstraintViolation::getMessage).collect(Collectors.toList()));
+        return  errorMessages;
     }
 
     /**
@@ -137,29 +127,17 @@ public final class BeanValidators {
     }
 
     /**
-     * jdk1.8辅助方法, 转换Set<ConstraintViolation>为List<propertyPath +separator+ message>.
+     * 辅助方法, 转换Set<ConstraintViolation>为List<propertyPath +separator+ message>.
      *
      * @param constraintViolations the constraint violations
      * @param separator            the separator
      * @return the list
      */
     @SuppressWarnings("rawtypes")
-    //public static List<String> extractPropertyAndMessageAsList(Set<? extends ConstraintViolation> constraintViolations,
-    //                                                           String separator) {
-    //    List<String> errorMessages = Lists.newArrayList();
-    //    errorMessages.addAll(constraintViolations.stream().map(violation -> violation.getPropertyPath() + separator + violation.getMessage()).collect(Collectors.toList()));
-    //    return errorMessages;
-    //}
-
-    /**
-     * 辅助方法, 转换Set<ConstraintViolation>为List<propertyPath +separator+ message>.
-     */
     public static List<String> extractPropertyAndMessageAsList(Set<? extends ConstraintViolation> constraintViolations,
                                                                String separator) {
-        List<String> errorMessages = new ArrayList<String>();
-        for (ConstraintViolation violation : constraintViolations) {
-            errorMessages.add(violation.getPropertyPath() + separator + violation.getMessage());
-        }
+        List<String> errorMessages = Lists.newArrayList();
+        errorMessages.addAll(constraintViolations.stream().map(violation -> violation.getPropertyPath() + separator + violation.getMessage()).collect(Collectors.toList()));
         return errorMessages;
     }
 }

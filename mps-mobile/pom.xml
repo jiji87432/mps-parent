@@ -114,10 +114,6 @@
             <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-        </dependency>
         <!-- cxf -->
         <dependency>
             <groupId>org.apache.cxf</groupId>
