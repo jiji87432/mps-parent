@@ -28,7 +28,7 @@
                 <dubbo.application.name>mps-mobile</dubbo.application.name>
                 <dubbo.application.owner>zhangyongji</dubbo.application.owner>
                 <dubbo.registry.protocol>zookeeper</dubbo.registry.protocol>
-                <dubbo.registry.address>127.0.0.1:2181</dubbo.registry.address>
+                <dubbo.registry.address>172.20.15.122:2181</dubbo.registry.address>
                 <dubbo.registry.client>curator</dubbo.registry.client>
                 <dubbo.registry.file>tmp/mps-mobile.cache</dubbo.registry.file>
                 <dubbo.application.logger>slf4j</dubbo.application.logger>
@@ -52,7 +52,7 @@
                 <dubbo.application.name>mps-mobile</dubbo.application.name>
                 <dubbo.application.owner>zhangyongji</dubbo.application.owner>
                 <dubbo.registry.protocol>zookeeper</dubbo.registry.protocol>
-                <dubbo.registry.address>127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183</dubbo.registry.address>
+                <dubbo.registry.address>172.20.15.122:2181</dubbo.registry.address>
                 <dubbo.registry.client>curator</dubbo.registry.client>
                 <dubbo.registry.file>/opt/data/zookeeper/mps-mobile.cache</dubbo.registry.file>
                 <dubbo.application.logger>slf4j</dubbo.application.logger>
@@ -144,6 +144,10 @@
             <groupId>com.chanpay.ppd.mps</groupId>
             <artifactId>mps-provider-api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.netfinworks.tradeservice</groupId>
+            <artifactId>tradeservice-service-site-facade</artifactId>
         </dependency>
     </dependencies>
 

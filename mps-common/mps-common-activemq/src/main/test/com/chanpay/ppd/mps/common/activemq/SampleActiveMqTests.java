@@ -43,9 +43,19 @@ public class SampleActiveMqTests {
 	@Autowired
 	private Producer producer;
 
+	@Autowired
+	private Consumer consumer;
+
 	@Test
 	public void sendSimpleMessage() throws InterruptedException, JMSException {
 		this.producer.send("Test message");
+		Thread.sleep(1000L);
+		assertThat(this.outputCapture.toString().contains("Test message")).isTrue();
+	}
+
+	@Test
+	public void receiveSimpleMessage() throws InterruptedException, JMSException {
+		this.consumer.receiveQueue("");
 		Thread.sleep(1000L);
 		assertThat(this.outputCapture.toString().contains("Test message")).isTrue();
 	}

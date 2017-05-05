@@ -47,4 +47,9 @@ public interface ParamConstants {
         public static final String SUCCESS = "S0001";
     }
 
+
+    public static interface InsFacade {
+        public static final String SUCCESS = "INS00000";
+    }
+
 }

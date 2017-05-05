@@ -4,10 +4,10 @@ import com.chanpay.ppd.mps.web.base.exception.BusinessException;
 
 /**
  * Created by jiji on 2017/4/27.
- * 订单创建异常
+ * 登录鉴权异常
  */
-public class OrderCreateFailException extends BusinessException {
-    public OrderCreateFailException(String message) {
+public class AuthException extends BusinessException {
+    public AuthException(String message) {
         super(message);
     }
 }

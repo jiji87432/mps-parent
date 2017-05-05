@@ -37,7 +37,11 @@ chanpay:
     url:
       tradeWsUrl: http://yinternal.chanpay.com/tss/tradeProcessFacade?wsdl
 
-upload:
-  #Disk upload
-  work-folder-name: /Users/zhangxd/files #文件存储路径
-  access-url: http://127.0.0.1:8090 #文件访问地址，可使用反向代理
+spring:
+  activemq:
+    broker-url: tcp://localhost:61616 #指定ActiveMQ broker的URL，默认自动生成.
+    user: admin #指定broker的用户
+    password: admin #指定broker的密码.
+    in-memory: true #是否是内存模式，默认为true.
+    pool:
+      enabled: false #是否创建PooledConnectionFactory，而非ConnectionFactory，默认false

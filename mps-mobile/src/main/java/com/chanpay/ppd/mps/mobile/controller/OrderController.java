@@ -134,8 +134,8 @@ public class OrderController extends BaseController {
     )
     public Map<String, Object> createAndPay(@RequestBody @Valid PayOrderRequest request, BindingResult bindingResult,
                                             @ApiParam(required = true, value = "版本", defaultValue = "v1") @PathVariable("version") String version
-    ) throws OrderPayMentFailException, MerchantBindException {
-        insRpcService.validateMerNo(request.getPartnerId(), request.getMerId());
+    ) throws OrderPayMentFailException {
+        //insRpcService.validateMerNo(request.getPartnerId(), request.getMerId());
         PaymentResponse response = chanPayRpcService.createAndPay(request);
         PayOrderResponse payOrderResponse = new PayOrderResponse();
         List<PayMethodResult> payResult = response.getPayMethodResultList();
@@ -160,9 +160,6 @@ public class OrderController extends BaseController {
                 message.put(BaseResponeMessage.RESP_DATA, payOrderResponse);
             }
         }
-        message.put(BaseResponeMessage.RESP_CODE, ReturnCode.SUCCESS);
-        message.put(BaseResponeMessage.RESP_CODE_DESC, ReturnCode.SUCCESS_DESC);
-        message.put(BaseResponeMessage.RESP_DATA, payOrderResponse);
         return message;
     }
 
@@ -182,8 +179,8 @@ public class OrderController extends BaseController {
     )
     public Map<String, Object> createOrder(@RequestBody @Valid CreateOrderRequest request, BindingResult bindingResult,
                                            @ApiParam(required = true, value = "版本", defaultValue = "v1") @PathVariable("version") String version
-    ) throws OrderCreateFailException, MerchantBindException {
-        insRpcService.validateMerNo(request.getPartnerId(), request.getMerId());
+    ) throws OrderCreateFailException {
+        //insRpcService.validateMerNo(request.getPartnerId(), request.getMerId());
         //首先调用mos创建主订单
         PreOrderRequest preOrderRequest = new PreOrderRequest();
         webServiceHelper.requestWrapper(request);

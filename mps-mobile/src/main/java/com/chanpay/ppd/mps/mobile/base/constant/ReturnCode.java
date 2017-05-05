@@ -100,6 +100,27 @@ public final class ReturnCode {
      */
     public static final String ORDER_CREATE_FAIL = "20010";
 
+    /**
+     * 400 用户绑定关系已存在
+     */
+    public static final String USER_BIND_EXIST = "20011";
+
+    /**
+     * 400 重置登录密码失败
+     */
+    public static final String RESET_PWD_FAIL = "20012";
+
+    /**
+     * 400 修改登录密码失败
+     */
+    public static final String UPDATE_PWD_FAIL = "20013";
+
+    /**
+     * 400 登录鉴权失败
+     */
+    public static final String AUTH_FAIL = "20014";
+
+
     private ReturnCode() {
         throw new IllegalAccessError("Utility class");
     }

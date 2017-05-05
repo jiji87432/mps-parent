@@ -76,7 +76,7 @@
         <!-- third jar -->
         <netfinworks.version>2.0.0</netfinworks.version>
         <tradeservice.service.facade.version>2.1.2-chanpay-SNAPSHOT</tradeservice.service.facade.version>
-        <tradeservice.service.site.facade.version>2.1.2-chanpay-site-SNAPSHOT</tradeservice.service.site.facade.version>
+        <tradeservice.service.site.facade.version>2.1.3-chanpay-site-SNAPSHOT</tradeservice.service.site.facade.version>
         <mos.version>1.0.0-SNAPSHOT</mos.version>
         <ins.version>1.0.1-SNAPSHOT</ins.version>
         <mos.version>1.0.0-SNAPSHOT</mos.version>
@@ -266,6 +266,11 @@
                 <groupId>com.netfinworks.tradeservice</groupId>
                 <artifactId>tradeservice-service-facade</artifactId>
                 <version>${tradeservice.service.facade.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netfinworks.tradeservice</groupId>
+                <artifactId>tradeservice-service-site-facade</artifactId>
+                <version>${tradeservice.service.site.facade.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.chanpay.ppd.mos</groupId>

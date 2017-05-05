@@ -19,15 +19,11 @@ public class AuthUser extends AbstractAuthUser {
     /**
      * 用户默认角色
      */
-    private static final String TRIP_USER_ROLE = "ROLE_USER";
-    /**
-     * id
-     */
-    private String id;
+    private static final String USER_ROLE = "ROLE_USER";
     /**
      * 手机号
      */
-    private String mobile;
+    private String loginId;
     /**
      * 密码
      */
@@ -37,32 +33,18 @@ public class AuthUser extends AbstractAuthUser {
      */
     private boolean enabled;
 
-    public AuthUser(
-            String id,
-            String mobile,
-            String password,
-            boolean enabled
-    ) {
-        this.id = id;
-        this.mobile = mobile;
+    public AuthUser(String loginId, String password, boolean enabled) {
+        this.loginId = loginId;
         this.password = password;
         this.enabled = enabled;
     }
 
-    public String getId() {
-        return id;
+    public String getLoginId() {
+        return loginId;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setLoginId(String loginId) {
+        this.loginId = loginId;
     }
 
     @Override
@@ -86,7 +68,7 @@ public class AuthUser extends AbstractAuthUser {
 
     @Override
     public String getUsername() {
-        return mobile;
+        return loginId;
     }
 
     // 返回分配给用户的角色列表
@@ -94,7 +76,7 @@ public class AuthUser extends AbstractAuthUser {
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority(TRIP_USER_ROLE));
+        authorities.add(new SimpleGrantedAuthority(USER_ROLE));
         return authorities;
     }
 

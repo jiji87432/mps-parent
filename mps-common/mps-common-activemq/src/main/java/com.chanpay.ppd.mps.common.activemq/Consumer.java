@@ -16,15 +16,21 @@
 
 package com.chanpay.ppd.mps.common.activemq;
 
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Consumer {
 
-	@JmsListener(destination = "sample.queue")
+	private String text;
+
+	public String receive() {
+		return text;
+	}
+
+	//@JmsListener(destination = "ins_queue")
 	public void receiveQueue(String text) {
-		System.out.println(text);
+		this.text = text;
+		System.out.println("Consumer receive msg :" + text);
 	}
 
 }

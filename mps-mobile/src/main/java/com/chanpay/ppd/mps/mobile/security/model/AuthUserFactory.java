@@ -1,7 +1,7 @@
 package com.chanpay.ppd.mps.mobile.security.model;
 
 
-import com.chanpay.ppd.mps.api.entity.TripUser;
+import com.chanpay.ppd.mps.mobile.entity.user.User;
 
 /**
  * The type Auth user factory.
@@ -19,10 +19,9 @@ public final class AuthUserFactory {
      * @param user the user
      * @return the auth user
      */
-    public static AuthUser create(TripUser user) {
+    public static AuthUser create(User user) {
         return new AuthUser(
-                user.getId(),
-                user.getMobile(),
+                user.getLoginId(),
                 user.getPassword(),
                 user.getEnabled()
         );

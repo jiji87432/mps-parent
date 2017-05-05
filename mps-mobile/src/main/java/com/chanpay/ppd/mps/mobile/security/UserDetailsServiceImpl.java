@@ -1,12 +1,11 @@
 package com.chanpay.ppd.mps.mobile.security;
 
-import com.chanpay.ppd.mps.api.entity.TripUser;
-import com.chanpay.ppd.mps.api.service.ITripUserService;
+import com.chanpay.ppd.mps.mobile.entity.user.User;
 import com.chanpay.ppd.mps.mobile.security.model.AuthUserFactory;
+import com.chanpay.ppd.mps.mobile.service.InsRpcService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,17 +20,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * 用户服务
      */
     @Autowired
-    private ITripUserService tripUserService;
+    private InsRpcService insRpcService;
 
     @Override
     public UserDetails loadUserByUsername(String loginName) {
-        //TODO 调用INS查询USER信息
-        TripUser user = tripUserService.getByMobile(loginName);
-
-        if (user == null) {
-            throw new UsernameNotFoundException(String.format("No user found with username '%s'.", loginName));
-        } else {
-            return AuthUserFactory.create(user);
-        }
+        //insRpcService.loginAuth();
+        User user = new User(true);
+        return AuthUserFactory.create(user);
     }
 }

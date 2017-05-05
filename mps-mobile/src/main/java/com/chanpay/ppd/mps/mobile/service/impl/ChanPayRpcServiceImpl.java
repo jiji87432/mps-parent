@@ -1,10 +1,13 @@
 package com.chanpay.ppd.mps.mobile.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.chanpay.ppd.mps.common.activemq.Producer;
 import com.chanpay.ppd.mps.common.utils.SeqUtils;
 import com.chanpay.ppd.mps.mobile.base.constant.ParamConstants;
 import com.chanpay.ppd.mps.mobile.base.exception.OrderPayMentFailException;
 import com.chanpay.ppd.mps.mobile.common.helper.WebServiceHelper;
 import com.chanpay.ppd.mps.mobile.entity.PayOrderRequest;
+import com.chanpay.ppd.mps.mobile.entity.notify.NotifyMessage;
 import com.chanpay.ppd.mps.mobile.service.ChanPayRpcService;
 import com.netfinworks.common.domain.OperationEnvironment;
 import com.netfinworks.common.util.money.Money;
@@ -42,6 +45,9 @@ public class ChanPayRpcServiceImpl implements ChanPayRpcService {
 
     @Autowired
     private WebServiceHelper webServiceHelper;
+
+    @Autowired
+    private Producer producer;
 
     @Override
     public PaymentResponse createAndPay(PayOrderRequest payOrderRequest) throws OrderPayMentFailException {
@@ -113,6 +119,18 @@ public class ChanPayRpcServiceImpl implements ChanPayRpcService {
             LOGGER.info("response message:" + response.getErrorCode(), response.getResultMessage());
             if (ParamConstants.TradeService.SUCCESS.equals(response.getErrorCode().equals("S0001"))) {
                 // 放入消息队列，mos系统消费队列并进行通知
+                NotifyMessage message = new NotifyMessage();
+                //message.setPartnerId();
+                //message.setSellerId();
+                //message.setPayOrderNo();
+                //message.setThirdOrderNo();
+                //message.setPayTool();
+                //message.setBankCode();
+                //message.setAmount();
+                //message.setCardNo();
+                //message.setCardType();
+                //message.setStatus();
+                this.producer.send(JSONObject.toJSONString(message));
             }
         }
         return null;

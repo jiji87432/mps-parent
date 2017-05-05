@@ -12,7 +12,7 @@
     <!-- 用户添加、更新昵称 -->
     <dubbo:reference id="mchUserFacade" interface="com.chanpay.ppd.ins.api.mch.facade.IMchUserFacade"/>
     <!-- 登录鉴权 -->
-    <dubbo:reference id="authfacade" interface="com.chanpay.ppd.ins.api.security.facade.IAuthfacade"/>
+    <dubbo:reference id="authfacade" interface="com.chanpay.ppd.ins.api.security.facade.IAuthFacade"/>
     <!-- 密码设置、更新、重置 -->
     <dubbo:reference id="loginPwdFacade" interface="com.chanpay.ppd.ins.api.security.facade.ILoginPwdFacade"/>
     <!-- 权限配置 -->

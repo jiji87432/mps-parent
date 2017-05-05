@@ -19,6 +19,11 @@
         </dependency>
         <dependency>
             <groupId>com.chanpay.ppd.mps</groupId>
+            <artifactId>mps-common-activemq</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.chanpay.ppd.mps</groupId>
             <artifactId>mps-common-redis</artifactId>
             <version>${project.version}</version>
         </dependency>

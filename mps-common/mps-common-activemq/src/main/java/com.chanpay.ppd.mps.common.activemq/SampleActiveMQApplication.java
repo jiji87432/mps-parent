@@ -30,7 +30,7 @@ public class SampleActiveMQApplication {
 
 	@Bean
 	public Queue queue() {
-		return new ActiveMQQueue("sample.queue");
+		return new ActiveMQQueue("ins_queue");
 	}
 
 	public static void main(String[] args) {

@@ -1,16 +1,22 @@
 package com.chanpay.ppd.mps.mobile.controller;
 
-import com.chanpay.ppd.mps.api.exception.UserNotExistException;
-import com.chanpay.ppd.mps.api.exception.UserPwdErrorException;
-import com.chanpay.ppd.mps.api.exception.base.BusinessException;
-import com.chanpay.ppd.mps.api.service.ITripUserService;
+import com.alibaba.fastjson.JSONObject;
+import com.chanpay.ppd.ins.api.security.facade.IAuthFacade;
+import com.chanpay.ppd.ins.api.security.facade.dto.LoginAuthRequest;
+import com.chanpay.ppd.ins.api.security.facade.dto.LoginAuthResponse;
+import com.chanpay.ppd.mps.mobile.base.BaseResponeMessage;
+import com.chanpay.ppd.mps.mobile.base.constant.ParamConstants;
 import com.chanpay.ppd.mps.mobile.base.constant.ReturnCode;
+import com.chanpay.ppd.mps.mobile.base.exception.AuthException;
 import com.chanpay.ppd.mps.mobile.common.controller.BaseController;
+import com.chanpay.ppd.mps.mobile.common.helper.WebServiceHelper;
 import com.chanpay.ppd.mps.mobile.entity.UserLoginRequest;
 import com.chanpay.ppd.mps.mobile.security.utils.TokenUtil;
 import com.chanpay.ppd.mps.web.security.AuthenticationTokenFilter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +26,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,12 +42,14 @@ import java.util.Map;
 @RequestMapping("/auth")
 @Api(tags = "鉴权管理")
 public class AuthController extends BaseController {
-
     /**
-     * 用户服务
+     * Logger
      */
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
+
     @Autowired
-    private ITripUserService tripUserService;
+    private IAuthFacade authFacade;
+
     /**
      * 权限管理
      */
@@ -58,26 +67,45 @@ public class AuthController extends BaseController {
     @Autowired
     private TokenUtil jwtTokenUtil;
 
+    @Autowired
+    private WebServiceHelper webServiceHelper;
+
     /**
      * Create authentication token bearer auth token.
      * @param request
      * @return
-     * @throws BusinessException
+     * @throws AuthException
      */
     @PostMapping(value = "/token")
     @ApiOperation("登录鉴权")
-    public Map<String, Object> createAuthenticationToken(@RequestBody UserLoginRequest request) throws BusinessException {
-        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(request.getLoginId(), request.getPassword());
-        final Authentication authentication = authenticationManager.authenticate(upToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        final String token = jwtTokenUtil.generateToken(userDetails);
-        // Return the token
-        Map<String, Object> tokenMap = new HashMap<>();
-        tokenMap.put("accessToken", token);
-        tokenMap.put("expirationDate", jwtTokenUtil.getExpiration());
-        tokenMap.put("tokenType", TokenUtil.TOKEN_TYPE_BEARER);
-        return tokenMap;
+    public Map<String, Object> createAuthenticationToken(@RequestBody UserLoginRequest request, BindingResult bindingResult) throws AuthException {
+        LoginAuthRequest loginAuthRequest = new LoginAuthRequest();
+        webServiceHelper.requestWrapper(request);
+        loginAuthRequest.setLoginId(request.getLoginId());
+        loginAuthRequest.setIdType(request.getIdType());
+        loginAuthRequest.setLoginPwd(request.getPassword());
+        LoginAuthResponse response = authFacade.loginAuth(loginAuthRequest);
+        LOGGER.info("调用登录鉴权响应对象：", null != response ? JSONObject.toJSONString(response) : response);
+        if (null != response && response.getRespCode().equals(ParamConstants.InsFacade.SUCCESS)) {
+            UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(request.getLoginId(), request.getPassword());
+            final Authentication authentication = authenticationManager.authenticate(upToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            final String token = jwtTokenUtil.generateToken(userDetails);
+            // Return the token
+            Map<String, Object> message = new HashMap<>();
+            message.put("accessToken", token);
+            message.put("expirationDate", jwtTokenUtil.getExpiration());
+            message.put("tokenType", TokenUtil.TOKEN_TYPE_BEARER);
+            message.put("tokenType", TokenUtil.TOKEN_TYPE_BEARER);
+            message.put("partnerId", response.getPartnerId());
+            message.put("merId", response.getSellerId());
+            message.put(BaseResponeMessage.RESP_CODE, ReturnCode.SUCCESS);
+            message.put(BaseResponeMessage.RESP_CODE_DESC, ReturnCode.SUCCESS_DESC);
+            return message;
+        } else {
+            throw new AuthException(String.format("用户 '%s' 登录鉴权失败", request.getLoginId()));
+        }
     }
 
     /**
@@ -128,21 +156,10 @@ public class AuthController extends BaseController {
      * @param ex the ex
      * @return the map
      */
-    @ExceptionHandler(UserNotExistException.class)
+    @ExceptionHandler(AuthException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, Object> handleSmsTooMuchException(UserNotExistException ex) {
-        return makeErrorMessage(ReturnCode.USER_EXIST, "User not exist", ex.getMessage());
+    public Map<String, Object> handleSmsTooMuchException(AuthException ex) {
+        return makeErrorMessage(ReturnCode.AUTH_FAIL, "auth fail", ex.getMessage());
     }
 
-    /**
-     * Handle sms too much exception map.
-     *
-     * @param ex the ex
-     * @return the map
-     */
-    @ExceptionHandler(UserPwdErrorException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, Object> handleSmsTooMuchException(UserPwdErrorException ex) {
-        return makeErrorMessage(ReturnCode.INVALID_GRANT, "User pwd error", ex.getMessage());
-    }
 }
