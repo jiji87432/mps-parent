@@ -120,6 +120,16 @@ public final class ReturnCode {
      */
     public static final String AUTH_FAIL = "20014";
 
+    /**
+     * 400 登录鉴权失败
+     */
+    public static final String UPDATE_USERINFO_FAIL = "20015";
+
+    /**
+     * 400 商户权限配置异常
+     */
+    public static final String MERPERMISSION_ADD_FAIL = "20016";
+
 
     private ReturnCode() {
         throw new IllegalAccessError("Utility class");

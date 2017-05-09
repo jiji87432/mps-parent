@@ -28,9 +28,7 @@ public class WebSecurityConfig extends AbstractWebSecurityConfig {
                         "/*/sms/captcha",
                         "/*/user/password",
                         "/*/currency/**"
-                )
-                .antMatchers(HttpMethod.POST, "/*/user")
-        ;
+                );
     }
 
     @Override

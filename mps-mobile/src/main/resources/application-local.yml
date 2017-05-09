@@ -30,7 +30,7 @@ server:
 security:
   jwt:
     secret: k09BQnaF
-    expiration: 1728000 #20Days
+    expiration: 7200 #2h
 
 chanpay:
     tradeWsUrl: http://yinternal.chanpay.com/tss/tradeProcessFacade?wsdl
@@ -43,3 +43,8 @@ spring:
     in-memory: true #是否是内存模式，默认为true.
     pool:
       enabled: false #是否创建PooledConnectionFactory，而非ConnectionFactory，默认false
+
+upload:
+  #Disk upload
+  work-folder-name: /Users/jiji/Download #文件存储路径
+  access-url: http://127.0.0.1:8090 #文件访问地址，可使用反向代理

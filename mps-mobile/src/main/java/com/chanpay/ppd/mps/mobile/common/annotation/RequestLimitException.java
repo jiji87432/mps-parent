@@ -1,7 +1,7 @@
 package com.chanpay.ppd.mps.mobile.common.annotation;
 
 
-import com.chanpay.ppd.mps.api.exception.base.BusinessException;
+import com.chanpay.ppd.mps.web.base.exception.BusinessException;
 
 /**
  * The type Request limit exception.

@@ -1,10 +1,5 @@
 package com.chanpay.ppd.mps.mobile.test;
 
-import com.chanpay.ppd.mps.api.entity.TripUser;
-import org.springframework.web.client.RestTemplate;
-
-import java.net.URI;
-
 public class SpringRestTestClient {
  
     public static final String REST_SERVICE_URI = "http://localhost:8081/";
@@ -36,13 +31,13 @@ public class SpringRestTestClient {
      
     /* POST */
     private static void createUser() {
-        System.out.println("Testing create User API----------");
-        RestTemplate restTemplate = new RestTemplate();
-        TripUser user = new TripUser();
-        user.setMobile("15101187432");
-        user.setAge("28");
-        user.setGender("M");
-        URI uri = restTemplate.postForLocation(REST_SERVICE_URI+"/v1/user/", user, TripUser.class);
+        //System.out.println("Testing create User API----------");
+        //RestTemplate restTemplate = new RestTemplate();
+        //TripUser user = new TripUser();
+        //user.setMobile("15101187432");
+        //user.setAge("28");
+        //user.setGender("M");
+        //URI uri = restTemplate.postForLocation(REST_SERVICE_URI+"/v1/user/", user, TripUser.class);
         //System.out.println("Location : "+uri.toASCIIString());
     }
  

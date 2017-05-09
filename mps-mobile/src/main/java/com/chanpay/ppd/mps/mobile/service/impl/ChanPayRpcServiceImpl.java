@@ -97,13 +97,13 @@ public class ChanPayRpcServiceImpl implements ChanPayRpcService {
         jaxWsProxyFactoryBean.setAddress(tradeWsUrl);
         TradeProcessFacade facade = (TradeProcessFacade)jaxWsProxyFactoryBean.create();
         PaymentResponse response = facade.createAndPay(tradeRequest, opEnv);
-        if (response != null && response.isSuccess()) {
-            LOGGER.info("response message:" + response.getErrorCode(), response.getResultMessage());
-            if (!ParamConstants.TradeService.SUCCESS.equals(response.getErrorCode().equals("S0001"))) {
-                throw new OrderPayMentFailException(String.format("订单 '%s' 支付失败", response.getPaymentVoucherNo()));
-            }
+        LOGGER.info("调用订单支付响应对象：", null != response ? com.alibaba.fastjson.JSONObject.toJSONString(response) : response);
+        if (response != null && response.isSuccess() && ParamConstants.TradeService.SUCCESS.equals(response.getErrorCode())) {
+            return response;
+        } else {
+            throw new OrderPayMentFailException(String.format("订单 '%s' 支付失败,响应码 '%s' ，响应描述 '%s'",
+                    response.getPaymentVoucherNo(), response.getErrorCode(), response.getResultMessage()));
         }
-        return response;
     }
 
     @Override

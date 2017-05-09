@@ -16,10 +16,15 @@ public class ResetUserLoginPwdRequest extends BaseRequestMessage {
     @Pattern(regexp = "^((13[0-9])|(15[^4,\\\\D])|(18[0,5-9]))\\\\d{8}$", message = "{Pattern.User.loginId}")
     private String loginId;
 
-    // 登录标识类型
-    @NotNull(message = "{NotNull.User.idType}")
-    @Pattern(regexp = "^01|02$", message = "{Pattern.User.idType}")
-    private String idType;
+    // 子登录标识
+    @NotNull(message = "{NotNull.UserBindRequest.subLoginId}")
+    @Pattern(regexp = "^((13[0-9])|(15[^4,\\\\D])|(18[0,5-9]))\\\\d{8}$", message = "{Pattern.UserBindRequest.loginId}")
+    private String subLoginId;
+
+    // 商户号
+    @NotNull(message = "{NotNull.MerInfo.merId}")
+    @Length(max = 32, message = "{Length.MerInfo.merId}")
+    private String merId;
 
     // 登录密码
     @NotNull(message = "{NotNull.User.password}")
@@ -34,12 +39,20 @@ public class ResetUserLoginPwdRequest extends BaseRequestMessage {
         this.loginId = loginId;
     }
 
-    public String getIdType() {
-        return idType;
+    public String getSubLoginId() {
+        return subLoginId;
     }
 
-    public void setIdType(String idType) {
-        this.idType = idType;
+    public void setSubLoginId(String subLoginId) {
+        this.subLoginId = subLoginId;
+    }
+
+    public String getMerId() {
+        return merId;
+    }
+
+    public void setMerId(String merId) {
+        this.merId = merId;
     }
 
     public String getPassword() {

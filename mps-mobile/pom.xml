@@ -137,13 +137,12 @@
             <artifactId>ins-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.netfinworks.ma.service</groupId>
-            <artifactId>ma-service-facade</artifactId>
+            <groupId>com.chanpay.ppd.mos</groupId>
+            <artifactId>mos-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.chanpay.ppd.mps</groupId>
-            <artifactId>mps-provider-api</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <groupId>com.netfinworks.ma.service</groupId>
+            <artifactId>ma-service-facade</artifactId>
         </dependency>
         <dependency>
             <groupId>com.netfinworks.tradeservice</groupId>

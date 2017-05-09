@@ -37,13 +37,6 @@ public class User {
      */
     private String remarks;
 
-    public User() {
-    }
-
-    public User(Boolean enabled) {
-        this.enabled = true; //可用
-    }
-
     public String getLoginId() {
         return loginId;
     }

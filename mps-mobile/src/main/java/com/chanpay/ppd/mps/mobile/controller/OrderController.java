@@ -19,7 +19,6 @@ import com.chanpay.ppd.mps.mobile.common.controller.BaseController;
 import com.chanpay.ppd.mps.mobile.common.helper.WebServiceHelper;
 import com.chanpay.ppd.mps.mobile.entity.*;
 import com.chanpay.ppd.mps.mobile.service.ChanPayRpcService;
-import com.chanpay.ppd.mps.mobile.service.InsRpcService;
 import com.netfinworks.tradeservice.facade.model.paymethod.OnlineBankPayMethodResult;
 import com.netfinworks.tradeservice.facade.model.paymethod.PayMethodResult;
 import com.netfinworks.tradeservice.facade.response.PaymentResponse;
@@ -62,9 +61,6 @@ public class OrderController extends BaseController {
     private ChanPayRpcService chanPayRpcService;
 
     @Autowired
-    private InsRpcService insRpcService;
-
-    @Autowired
     private WebServiceHelper webServiceHelper;
 
     /**
@@ -94,8 +90,10 @@ public class OrderController extends BaseController {
         queryAppOrderRequest.setPayOrderTimeEnd(request.getOrderEndDate());
         queryAppOrderRequest.setSellerName(request.getBuyerName());
         QueryAppPayOrderResponse response = payOrderFacade.queryAppPayOrder(queryAppOrderRequest);
+        LOGGER.info("调用查询待支付订单信息响应对象：", null != response ? com.alibaba.fastjson.JSONObject.toJSONString(response) : response);
         List<QueryOrderResponse> list = new ArrayList<QueryOrderResponse>();
-        if (null != response && response.getAppPayOrderList().size() > 0) {
+        if (null != response && response.getRespCode().equals(ParamConstants.InsFacade.SUCCESS)
+                && response.getAppPayOrderList().size() > 0) {
             for (AppPayOrder appPayOrder : response.getAppPayOrderList()) {
                 QueryOrderResponse queryOrderResponse = new QueryOrderResponse();
                 queryOrderResponse.setPayOrderNo(appPayOrder.getPayOrderNo());
@@ -135,7 +133,6 @@ public class OrderController extends BaseController {
     public Map<String, Object> createAndPay(@RequestBody @Valid PayOrderRequest request, BindingResult bindingResult,
                                             @ApiParam(required = true, value = "版本", defaultValue = "v1") @PathVariable("version") String version
     ) throws OrderPayMentFailException {
-        //insRpcService.validateMerNo(request.getPartnerId(), request.getMerId());
         PaymentResponse response = chanPayRpcService.createAndPay(request);
         PayOrderResponse payOrderResponse = new PayOrderResponse();
         List<PayMethodResult> payResult = response.getPayMethodResultList();
@@ -149,17 +146,11 @@ public class OrderController extends BaseController {
                     }
                 }
             }
-
         }
         Map<String, Object> message = new HashMap<>();
-        if (response != null) {
-            LOGGER.info("error message:" + response.getErrorCode(), response.getResultMessage());
-            if (ParamConstants.TradeService.SUCCESS.equals(response.getErrorCode().equals("S0001"))) {
-                message.put(BaseResponeMessage.RESP_CODE, ReturnCode.SUCCESS);
-                message.put(BaseResponeMessage.RESP_CODE_DESC, ReturnCode.SUCCESS_DESC);
-                message.put(BaseResponeMessage.RESP_DATA, payOrderResponse);
-            }
-        }
+        message.put(BaseResponeMessage.RESP_CODE, ReturnCode.SUCCESS);
+        message.put(BaseResponeMessage.RESP_CODE_DESC, ReturnCode.SUCCESS_DESC);
+        message.put(BaseResponeMessage.RESP_DATA, payOrderResponse);
         return message;
     }
 
@@ -180,7 +171,6 @@ public class OrderController extends BaseController {
     public Map<String, Object> createOrder(@RequestBody @Valid CreateOrderRequest request, BindingResult bindingResult,
                                            @ApiParam(required = true, value = "版本", defaultValue = "v1") @PathVariable("version") String version
     ) throws OrderCreateFailException {
-        //insRpcService.validateMerNo(request.getPartnerId(), request.getMerId());
         //首先调用mos创建主订单
         PreOrderRequest preOrderRequest = new PreOrderRequest();
         webServiceHelper.requestWrapper(request);
@@ -194,6 +184,11 @@ public class OrderController extends BaseController {
         preOrderRequest.setExpiredTime(request.getExpiredTime());
         preOrderRequest.setOrderSource(request.getOrderSource());
         PreOrderResponse preOrderResponse = tradeOrderFacade.preOrder(preOrderRequest);
+        LOGGER.info("调用MOS创建主订单响应对象：", null != preOrderResponse ? com.alibaba.fastjson.JSONObject.toJSONString(preOrderResponse) : preOrderResponse);
+        if (null == preOrderResponse || (preOrderResponse != null && !preOrderResponse.getRespCode().equals(ParamConstants.MosFacade.SUCCESS))) {
+            throw new OrderCreateFailException("订单创建失败");
+        }
+        //在创建子订单，即订单支付流水
         PaymentOrderRequest paymentOrderRequest = new PaymentOrderRequest();
         webServiceHelper.requestWrapper(request);
         paymentOrderRequest.setPartnerId(request.getPartnerId());
@@ -204,12 +199,15 @@ public class OrderController extends BaseController {
         paymentOrderRequest.setSellerName(request.getBuyerName());
         paymentOrderRequest.setImei(request.getImei());
         PaymentOrderResponse paymentOrderResponse = payOrderFacade.paymentOrder(paymentOrderRequest);
+        LOGGER.info("调用MOS创建子订单响应对象：", null != paymentOrderResponse ? com.alibaba.fastjson.JSONObject.toJSONString(paymentOrderResponse) : paymentOrderResponse);
+        if (null == paymentOrderResponse || (paymentOrderResponse != null && !paymentOrderResponse.getRespCode().equals(ParamConstants.MosFacade.SUCCESS))) {
+            throw new OrderCreateFailException("订单创建失败");
+        }
         CreateOrderResponse response = new CreateOrderResponse();
         response.setPayOrderNo(paymentOrderResponse.getPayOrderNo());
         response.setTradeOrderNo(paymentOrderResponse.getTradeOrderNo());
         response.setTradeAmount(paymentOrderResponse.getAmount());
         response.setOrderStatus(paymentOrderResponse.getStatus());
-        //在创建子订单，即订单支付流水
         Map<String, Object> message = new HashMap<>();
         message.put(BaseResponeMessage.RESP_CODE, ReturnCode.SUCCESS);
         message.put(BaseResponeMessage.RESP_CODE_DESC, ReturnCode.SUCCESS_DESC);

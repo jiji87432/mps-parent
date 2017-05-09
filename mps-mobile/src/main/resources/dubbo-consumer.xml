@@ -6,7 +6,9 @@
 
     <!-- dubbo注解扫描包名 -->
     <!--<dubbo:annotation package="cn.zhangxd.platform.mobile.client"/>-->
-    <dubbo:reference interface="com.chanpay.ppd.mos.api.payment.facade.IPayOrderFacade" id="payOrderFacade"/>
+    <dubbo:reference id="payOrderFacade" interface="com.chanpay.ppd.mos.api.payment.facade.IPayOrderFacade"/>
+
+    <dubbo:reference id="tradeOrderFacade" interface="com.chanpay.ppd.mos.api.trade.facade.ITradeOrderFacade"/>
     <!-- 商户绑定、查询 -->
     <dubbo:reference id="mchBizFacade" interface="com.chanpay.ppd.ins.api.mch.facade.IMchBizFacade"/>
     <!-- 用户添加、更新昵称 -->
@@ -21,6 +23,4 @@
     <dubbo:reference id="mchFunFacade" interface="com.chanpay.ppd.ins.api.config.facade.IMchFunFacade"/>
     <!-- 支付工具查询 -->
     <dubbo:reference id="mchMethodFacade" interface="com.chanpay.ppd.ins.api.config.facade.IMchMethodFacade"/>
-    <dubbo:reference interface="com.chanpay.ppd.mps.api.service.ITripUserService" id="tripUserService"/>
-    <dubbo:reference interface="com.chanpay.ppd.mps.api.service.ICaptchaService" id="captchaService"/>
 </beans>

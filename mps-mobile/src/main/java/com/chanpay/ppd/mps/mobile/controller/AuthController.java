@@ -26,6 +26,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -71,6 +73,12 @@ public class AuthController extends BaseController {
     private WebServiceHelper webServiceHelper;
 
     /**
+     * 密码加密
+     */
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    /**
      * Create authentication token bearer auth token.
      * @param request
      * @return
@@ -83,7 +91,7 @@ public class AuthController extends BaseController {
         webServiceHelper.requestWrapper(request);
         loginAuthRequest.setLoginId(request.getLoginId());
         loginAuthRequest.setIdType(request.getIdType());
-        loginAuthRequest.setLoginPwd(request.getPassword());
+        loginAuthRequest.setLoginPwd(passwordEncoder.encode(request.getPassword()));
         LoginAuthResponse response = authFacade.loginAuth(loginAuthRequest);
         LOGGER.info("调用登录鉴权响应对象：", null != response ? JSONObject.toJSONString(response) : response);
         if (null != response && response.getRespCode().equals(ParamConstants.InsFacade.SUCCESS)) {
@@ -114,7 +122,7 @@ public class AuthController extends BaseController {
      * @param request the request
      * @return the bearer auth token
      */
-    @GetMapping(value = "/refresh")
+    @GetMapping(value = "/token")
     @ApiOperation("刷新token")
     public Map<String, Object> refreshAndGetAuthenticationToken(HttpServletRequest request) {
 
@@ -160,6 +168,18 @@ public class AuthController extends BaseController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, Object> handleSmsTooMuchException(AuthException ex) {
         return makeErrorMessage(ReturnCode.AUTH_FAIL, "auth fail", ex.getMessage());
+    }
+
+    /**
+     * Handle sms too much exception map.
+     *
+     * @param ex the ex
+     * @return the map
+     */
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, Object> handleSmsTooMuchException(UsernameNotFoundException ex) {
+        return makeErrorMessage(ReturnCode.USER_NOT_EXIST, "user not exist", ex.getMessage());
     }
 
 }

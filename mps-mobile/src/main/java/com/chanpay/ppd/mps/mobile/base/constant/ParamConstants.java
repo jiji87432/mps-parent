@@ -52,4 +52,8 @@ public interface ParamConstants {
         public static final String SUCCESS = "INS00000";
     }
 
+    public static interface MosFacade {
+        public static final String SUCCESS = "MOS00000";
+    }
+
 }
