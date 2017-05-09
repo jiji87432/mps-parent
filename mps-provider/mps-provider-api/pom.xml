@@ -18,10 +18,6 @@
             <artifactId>mps-common-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.chanpay.ppd.mos</groupId>
-            <artifactId>mos-api</artifactId>
-        </dependency>
     </dependencies>
 
 </project>
